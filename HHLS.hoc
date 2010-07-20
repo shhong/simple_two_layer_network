@@ -1,6 +1,6 @@
 begintemplate HHLS
-    public soma
-    external tstop, Dt
+    public soma, connect2target
+    external tstop
     objref icIndep, icCommon, r, rc
     
     create soma
@@ -12,40 +12,55 @@ begintemplate HHLS
             insert hh
             gnabar_hh = 0.079
             gkbar_hh = 0.041
-            icIndep = new IClamp(0.5)
-            icCommon = new IClamp(0.5)
+            icIndep = new CIClamp(0.5)
+            icCommon = new CIClamp(0.5)
         }
         
-        icIndep.del = 0
         icIndep.amp = 0
-        icIndep.dur = tstop
-
-        icCommon.del = 0
         icCommon.amp = 0
-        icCommon.dur = tstop
         
         rc = new Random(0)
         r = new Random($1)
         rc.normal(0, $3^2*$4)
         r.normal($2, $3^2*(1-$4))
-        rc.play(&icCommon.amp,Dt)
-        r.play(&icIndep.amp, Dt)
+        rc.play(&icCommon.amp, 0.2)
+        r.play(&icIndep.amp, 0.2)
     }
     
+    obfunc connect2target() { localobj nc //$o1 target point process, optional $o2 returned NetCon
+        soma nc = new NetCon(&v(0.5), $o1)
+        nc.threshold = 0
+        return nc
+    }
 endtemplate HHLS
 
 
 begintemplate L2
-    public soma, nclist
+    public soma, synlist, synapses, connect2target
     external NCells
     create soma
-    objref nclist
+    objref synlist
     
     proc init() {
         soma {
             insert pas
             g_pas = 0.5
+            e_pas = -65
         }
-        nclist = new List()
+        synlist = new List()
     }
+    
+    objref syn_
+    proc synapses() {
+        soma syn_ = new ExpSyn(0.5)
+        syn_.tau = 1.5
+        synlist.append(syn_)
+        
+    }
+    
+    obfunc connect2target() { localobj nc //$o1 target point process, optional $o2 returned NetCon
+        soma nc = new NetCon(&v(0.5), $o1)
+        return nc
+    }
+    
 endtemplate L2

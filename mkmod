@@ -1,0 +1,15 @@
+#!/bin/bash
+
+PLATFORM=`which nrnivmodl`
+HEAD=`expr "$PLATFORM" : '\(.*nrn\/\)'`
+PLATFORM=${PLATFORM#$HEAD}
+PLATFORM=${PLATFORM%'/bin/nrnivmodl'}
+echo $PLATFORM
+
+THISDIR=`pwd`
+cd $1
+THATDIR=`pwd`
+nrnivmodl
+cd $THISDIR
+#ln -Fs $THATDIR/$PLATFORM $PLATFORM
+cp -r $THATDIR/$PLATFORM $PLATFORM
