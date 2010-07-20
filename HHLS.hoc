@@ -1,0 +1,51 @@
+begintemplate HHLS
+    public soma
+    external tstop, Dt
+    objref icIndep, icCommon, r, rc
+    
+    create soma
+    
+    proc init() {
+        soma {
+            diam = 25
+            L = 40/PI
+            insert hh
+            gnabar_hh = 0.079
+            gkbar_hh = 0.041
+            icIndep = new IClamp(0.5)
+            icCommon = new IClamp(0.5)
+        }
+        
+        icIndep.del = 0
+        icIndep.amp = 0
+        icIndep.dur = tstop
+
+        icCommon.del = 0
+        icCommon.amp = 0
+        icCommon.dur = tstop
+        
+        rc = new Random(0)
+        r = new Random($1)
+        rc.normal(0, $3^2*$4)
+        r.normal($2, $3^2*(1-$4))
+        rc.play(&icCommon.amp,Dt)
+        r.play(&icIndep.amp, Dt)
+    }
+    
+endtemplate HHLS
+
+
+begintemplate L2
+    public soma, nclist
+    external NCells
+    create soma
+    objref nclist
+    
+    proc init() {
+        soma {
+            insert pas
+            g_pas = 0.5
+        }
+        nclist = new List()
+    }
+endtemplate L2

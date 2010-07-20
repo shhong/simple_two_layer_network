@@ -1,0 +1,38 @@
+load_file("nrngui.hoc")
+
+tstop = 5000
+steps_per_ms = 5
+Dt = 1/steps_per_ms
+
+NCells = 200
+
+load_file("HHLS.hoc")
+
+
+objref l1[NCells]
+for i=0,NCells-1 l1[i] = new HHLS(i+1, 0.0, .25, 0.3)
+objref l2
+l2 = new L2(2.0)
+
+objref syn[NCells]
+for i=0,NCells-1 l2.soma syn[i] = new ExpSyn(0.5)
+
+for i=0,NCells-1 l1[i].soma l2.nclist.append(new NetCon(&v(0.5), syn[i], 0 , 0 , 20))
+
+xopen("l1_1.ses")
+
+access l2.soma
+objref nc, nil, spiketime
+nc = new NetCon(&v(.5), nil)
+nc.threshold = -62
+spiketime = new Vector()
+nc.record(spiketime)
+
+init()
+run()
+
+objref f
+f = new File()
+f.wopen("test.dat")
+spiketime.printf(f)
+
