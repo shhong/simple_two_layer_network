@@ -9,11 +9,11 @@ twait = 0
 NCells = 400
 syntau = 5
 correlation = 0.2
-load_file("morphology_mechanisms2.hoc")
+load_file("morphology_mechanisms.hoc")
 
-load_file("highvar.hoc")
+load_file("lowvar.hoc")
 strdef outputfilename, spikefilename
-outputfilename = "highvar_N400_tau5.dat"
+outputfilename = "lowvar_N400_tau5.dat"
 
 
 objref l2
@@ -80,7 +80,7 @@ srate = 0
 for i=1,NCells-1 {
     spiketime[i].where(">=", twait)
     srate = srate + 1e3*spiketime[i].size/(tstop-twait)
-    sprint(spikefilename, "st_highvar/%d.bin",i+1)
+    sprint(spikefilename, "st_lowvar/%d.bin",i+1)
     f.wopen(spikefilename)
     spiketime[i].fwrite(f)
     f.close()

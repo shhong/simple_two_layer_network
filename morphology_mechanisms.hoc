@@ -60,18 +60,23 @@ begintemplate L2
 
     proc init() {
         soma {
-            insert pas
-            g_pas = 1/50
-            e_pas = -65
+//            diam = 25
+//            L = 40/PI
+//              insert hh
+//              gnabar_hh = 0.079
+//              gkbar_hh = 0.041
+              insert ml2
+              gleak_ml2 = 0.5e-3
         }
         synlist = new List()
     }
 
     objref syn_
     proc synapses() {
-        soma syn_ = new ExpSyn(0.5)
+        soma syn_ = new Exp2Syn(0.5)
         
-        syn_.tau = syntau//1.5
+        syn_.tau1 = 0.5
+        syn_.tau2 = syntau//1.5
         synlist.append(syn_)
 
     }
