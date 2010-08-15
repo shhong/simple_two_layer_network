@@ -2,7 +2,7 @@ TITLE Morris-Lecar spiking dynamics
 
 COMMENT
 
-Written by Sungho Hong
+Adapted from Prescott SA, ... by Sungho Hong
 Computational Neuroscience Unit
 Okinawa Institute of Science and Technology
 shhong@oist.jp

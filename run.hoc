@@ -1,0 +1,97 @@
+load_file("nrngui.hoc")
+
+tstop = 8000
+steps_per_ms = 5
+Dt = 1/steps_per_ms
+N = tstop*steps_per_ms
+twait = 0
+
+NCells = 400
+syntau = 5
+correlation = 0.2
+load_file("morphology_mechanisms2.hoc")
+
+load_file("highvar.hoc")
+strdef outputfilename, spikefilename
+outputfilename = "highvar_N400_tau5.dat"
+
+
+objref l2
+l2 = new L2(2.0)
+
+for i=0,NCells-1 l2.synapses()
+
+// ML
+nw = 0.02e-1 // 5ms
+//nw = 0.6e-1 // 50ms
+
+//HHLS
+//nw = 0.1e-1 // 5ms
+//nw = 0.1e-1 // 50ms
+
+objref randdel
+randdel = new Random(0)
+randdel.normal(0,1)
+
+objref nclist, nc, syn
+nclist = new List()
+for i=0,NCells/2-1 {
+    syn = l2.synlist.o(i)
+    nc = l1[i].connect2target(syn)
+    nc.weight = nw
+    nc.delay = randdel.repick()*0.5 + 4
+    if (nc.delay<0) nc.delay = 0.5
+    nclist.append(nc)
+}
+
+for i=NCells/2, NCells-1 {
+    syn = l2.synlist.o(i)
+
+//    syn.e = -90
+    nc = l1[i].connect2target(syn)
+    nc.weight = nw
+    
+    nc.delay = randdel.repick()*0.5 + 4
+    if (nc.delay<0) nc.delay = 0.5
+    nclist.append(nc)
+}
+
+objref spikecount[NCells], nil, spiketime[NCells]
+for i=0,NCells-1 {
+    spikecount[i] = l1[i].connect2target(nil)
+    spiketime[i] = new Vector()
+    spikecount[i].record(spiketime[i])
+}
+
+
+xopen("l1_1_ml.ses")
+
+access l2.soma
+objref epsp
+epsp = new Vector(N)
+epsp.record(&v(0.5), Dt)
+
+init()
+run()
+
+objref f
+f = new File()
+srate = 0
+for i=1,NCells-1 {
+    spiketime[i].where(">=", twait)
+    srate = srate + 1e3*spiketime[i].size/(tstop-twait)
+    sprint(spikefilename, "st_highvar/%d.bin",i+1)
+    f.wopen(spikefilename)
+    spiketime[i].fwrite(f)
+    f.close()
+}
+printf("Spike rate = %g Hz\n", srate/NCells)
+
+
+f.wopen(outputfilename)
+epsp.printf(f, "%.12g\n")
+f.close()
+
+
+
+quit()

@@ -1,0 +1,89 @@
+begintemplate HHLS
+    public soma, connect2target
+    external steps_per_ms, N
+    objref ico, icc, r, rc, zc, z
+    
+    create soma
+    
+    proc init() {
+        soma {
+            diam = 25
+            L = 40/PI
+            insert hh
+            gnabar_hh = 0.079
+            gkbar_hh = 0.041
+        ico = new CIClamp(0.5)
+            icc = new CIClamp(0.5)
+        }
+        
+        icc.mu = 0
+        ico.mu = $2
+
+        icc.tcorr = $5
+        ico.tcorr = $6
+
+        rc = new Random(1)
+        r = new Random($1)
+        rc.normal(0, 1)
+        r.normal(0, 1)
+    
+        cc05 = sqrt($4)
+        co05 = sqrt(1-$4)
+
+        icc.gain = ($3)*sqrt(2.0*steps_per_ms/$5)*cc05
+        ico.gain = ($3)*sqrt(2.0*steps_per_ms/$6)*co05
+
+        zc = new Vector(N)
+        z  = new Vector(N)
+
+        for i=0,N-1 {
+         zc.x[i] = rc.repick()
+             z.x[i]  = r.repick()
+        }
+
+        zc.play(&icc.amp, 1/steps_per_ms)
+        z.play(&ico.amp, 1/steps_per_ms)
+    }
+    
+    obfunc connect2target() { localobj nc //$o1 target point process, optional $o2 returned NetCon
+        soma nc = new NetCon(&v(0.5), $o1)
+        nc.threshold = -10
+        return nc
+    }
+endtemplate HHLS
+
+begintemplate L2
+    public soma, synlist, synapses, connect2target
+    external NCells, syntau
+    create soma
+    objref synlist
+
+    proc init() {
+        soma {
+//            diam = 25
+//            L = 40/PI
+//              insert hh
+//              gnabar_hh = 0.079
+//              gkbar_hh = 0.041
+              insert ml2
+              gleak_ml2 = 0.5e-3
+        }
+        synlist = new List()
+    }
+
+    objref syn_
+    proc synapses() {
+        soma syn_ = new Exp2Syn(0.5)
+        
+        syn_.tau1 = 0.5
+        syn_.tau2 = syntau//1.5
+        synlist.append(syn_)
+
+    }
+
+    obfunc connect2target() { localobj nc //$o1 target point process, optional $o2 returned NetCon
+        soma nc = new NetCon(&v(0.5), $o1)
+        return nc
+    }
+
+endtemplate L2
