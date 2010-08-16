@@ -1,3 +1,7 @@
+# emacs
+*~
+*.*~
+
 .DS_Store
 HHLS_Inh_0_tau_50ms/
 HHLS_Inh_0_tau_5ms/
@@ -11,10 +15,4 @@ tau_5ms/
 *.dat
 *.pdf
 
-highvar.hoc
-lowvar.hoc
-
-l1_1_ml.ses
-
-mods
 x86_64/
