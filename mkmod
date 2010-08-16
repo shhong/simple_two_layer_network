@@ -7,9 +7,9 @@ PLATFORM=${PLATFORM%'/bin/nrnivmodl'}
 echo $PLATFORM
 
 THISDIR=`pwd`
-cd $1
+cd "$1"
 THATDIR=`pwd`
 nrnivmodl
-cd $THISDIR
+cd "$THISDIR"
 #ln -Fs $THATDIR/$PLATFORM $PLATFORM
-cp -r $THATDIR/$PLATFORM $PLATFORM
+cp -r "$THATDIR"/$PLATFORM $PLATFORM
