@@ -1,9 +1,31 @@
 #!/usr/bin/env python
 
 import os
-
 import logging
 logging.basicConfig(filename='raster.log', filemode='w', level=logging.DEBUG)
+
+class SimulatedData(object):
+  def __init__(self, root):
+    super(SimulatedData, self).__init__()
+    from os.path import join
+    self.root = root
+    self.path = {'config': join(root, 'config.js')}
+    self.load_params()
+    self.set_path()
+    self.spike_time = SpikeTimeData(self.path['spiketime'])
+    self.PSTH = d.psth()
+  
+  def load_params(self):
+    import demjson
+    jsonfile = self.path['config']
+    self.params = demjson.decode(open(jsonfile, 'r').read())
+  
+  def set_path(self):
+    from os.path import join
+    self.path = {'ML response': }
+  
+
+
 
 class PSTH(object):
   def __init__(self, spiketimes, dt, tstop):
@@ -14,7 +36,7 @@ class PSTH(object):
     logging.info(str(self.spiketimes[10]))
     self.dt = dt
     self.tstop = tstop
-    
+  
   def plot_raster(self, axes):
     from numpy import ones
     for i, st in enumerate(self.spiketimes):
@@ -23,8 +45,7 @@ class PSTH(object):
     axes.hold(False)
     for direction in ["right", "bottom", "top"]:
       axes.axis[direction].set_visible(False)
-    axes.axis["left"].set_label("Neuron id")
-    
+    axes.axis["left"].set_label("Neuron id")	
   
   def get_spike_rate(self, smoothed=True, span=6):
     from numpy import hamming, convolve, zeros, ones
@@ -39,7 +60,7 @@ class PSTH(object):
       nn = sum(window)
       spike_rate = convolve(window, self.spike_rate_raw, mode="same")/nn
     return spike_rate
-    
+  
   def plot_rate(self, axes, smoothed=True, span=6):
     spike_rate = self.get_spike_rate(smoothed=smoothed, span=span)
     axes.plot(spike_rate, 'b')
@@ -61,7 +82,9 @@ class PSTH(object):
       axes.axis[direction].set_visible(False)
     axes.axis["bottom"].set_label("Rate (Hz)")
     return array(self.mean_rates)
-    
+  
+
+  
 class SpikeTimeData(object):
   def __init__(self, root):
     super(SpikeTimeData, self).__init__()
@@ -77,7 +100,7 @@ class SpikeTimeData(object):
   def to_fname(self, x):
     fname = '.'.join([str(x),'bin'])
     return fname
-    
+  
   def to_full_path(self, x):
     fname = os.path.join(self.root, self.to_fname(x))
     return fname
@@ -118,7 +141,7 @@ def main(path, name):
   logging.info(str(dir(ax.axis["bottom"])))
 #  ax.axis["bottom"].major_ticklabels=[]
   ax.set_title("ML")
-
+  
   ax = SubplotZero(f1, 414)
   f1.add_subplot(ax)
   dat = loadtxt('HHLS_'+name+'_N400_tau5.dat')
