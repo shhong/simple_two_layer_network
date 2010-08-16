@@ -13,8 +13,8 @@ load_file("morphology_mechanisms.hoc")
 
 load_file("lowvar.hoc")
 strdef outputfilename, spikefilename
-outputfilename = "lowvar_N400_tau5.dat"
-
+MLoutputfilename = sprint(spikefilename, "lowvar_ML_N%d_tau%d.dat", NCells, syntau)
+HHLSoutputfilename = sprint(spikefilename, "lowvar_HHLS_N%d_tau%d.dat", NCells, syntau)
 
 objref l2
 l2 = new L2(2.0)
@@ -85,13 +85,16 @@ for i=1,NCells-1 {
     spiketime[i].fwrite(f)
     f.close()
 }
+
 printf("Spike rate = %g Hz\n", srate/NCells)
 
 
-f.wopen(outputfilename)
+f.wopen(MLoutputfilename)
 epsp.printf(f, "%.12g\n")
 f.close()
 
-
+f.wopen(HHLSoutputfilename)
+epsp.printf(f, "%.12g\n")
+f.close()
 
 quit()
