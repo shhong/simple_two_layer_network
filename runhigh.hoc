@@ -9,9 +9,9 @@ twait = 0
 NCells = 400
 syntau = 5
 correlation = 0.2
-load_file("morphology_mechanisms.hoc")
+load_file("hocs/morphology_mechanisms.hoc")
 
-load_file("highvar.hoc")
+load_file("hocs/highvar.hoc")
 strdef outputfilename, spikefilename
 MLoutputfilename = sprint(spikefilename, "highvar_ML_N%d_tau%d.dat", NCells, syntau)
 HHLSoutputfilename = sprint(spikefilename, "highvar_HHLS_N%d_tau%d.dat", NCells, syntau)
