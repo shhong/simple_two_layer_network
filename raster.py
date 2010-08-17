@@ -13,7 +13,6 @@ class SimulatedData(object):
     self.load_params()
     self.set_path()
     self.spike_time = SpikeTimeData(self.path['spiketime'])
-    self.PSTH = d.psth()
   
   def load_params(self):
     import demjson
@@ -22,10 +21,12 @@ class SimulatedData(object):
   
   def set_path(self):
     from os.path import join
-    self.path = {'ML response': }
+    self.path = {'ML response': 'ML_N%(Ncells)d_tau%(tau)d' % self.params,
+                 'HHLS response': 'HHLS_N%(Ncells)d_tau%(tau)d' % self.params,
+                 'spiketime': 'spiketime'}
+    for key in self.path:
+      self.path[key] = join(self.root, self.path[key])
   
-
-
 
 class PSTH(object):
   def __init__(self, spiketimes, dt, tstop):
@@ -84,7 +85,7 @@ class PSTH(object):
     return array(self.mean_rates)
   
 
-  
+
 class SpikeTimeData(object):
   def __init__(self, root):
     super(SpikeTimeData, self).__init__()
@@ -116,8 +117,8 @@ class SpikeTimeData(object):
 
 def main(path, name):
   from numpy import linspace, loadtxt
-  d = SpikeTimeData(path) 
-  psth = d.psth()
+  d = SimulatedData(path) 
+  psth = d.spike_time.psth()
   
   from mpl_toolkits.axes_grid.axislines import SubplotZero
   import matplotlib.pyplot as plt
@@ -133,7 +134,7 @@ def main(path, name):
   
   ax = SubplotZero(f1, 413)
   f1.add_subplot(ax)
-  dat = loadtxt('ML_'+name+'_N400_tau5.dat')
+  dat = loadtxt(d.path['ML response'])
   t = linspace(0, 5000, dat.size)
   ax.plot(t, dat, 'k')
   for direction in ["left", "right", "top", "bottom"]:
@@ -144,7 +145,7 @@ def main(path, name):
   
   ax = SubplotZero(f1, 414)
   f1.add_subplot(ax)
-  dat = loadtxt('HHLS_'+name+'_N400_tau5.dat')
+  dat = loadtxt(d.path['HHLS response'])
   t = linspace(0, 5000, dat.size)
   ax.plot(t, dat, 'k')
   for direction in ["left", "right", "top"]:
@@ -165,4 +166,3 @@ def main(path, name):
 if __name__ == '__main__':
   import sys
   main(sys.argv[1], sys.argv[2])
-  
