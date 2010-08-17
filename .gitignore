@@ -2,7 +2,10 @@
 *~
 *.*~
 
+# Mac
 .DS_Store
+
+# old data
 HHLS_Inh_0_tau_50ms/
 HHLS_Inh_0_tau_5ms/
 ML_Inh_0_tau_50ms/
@@ -12,7 +15,16 @@ st_lowvar/
 tau_50ms/
 tau_5ms/
 
+# data
+spiketime/
 *.dat
 *.pdf
+config.js
 
+# NEURON
 x86_64/
+run.hoc
+testrun.hoc
+
+# pysmell
+PYSMELL*
