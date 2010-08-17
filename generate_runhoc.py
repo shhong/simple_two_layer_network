@@ -109,7 +109,9 @@ f.close()
 quit()
 
 """
-
-hoctemplate = Template(hoctemplate)
-params = demjson.decode(open("config.js", "r").read())
-print hoctemplate.safe_substitute(params)
+if __name__ == '__main__':
+  import sys
+  hoctemplate = Template(hoctemplate)
+  params = demjson.decode(open(sys.argv[1], "r").read())
+  hocstring = hoctemplate.safe_substitute(params)
+  open(sys.argv[2], 'w').write(hocstring)
