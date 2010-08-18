@@ -13,12 +13,12 @@ N = tstop*steps_per_ms
 twait = 0
 
 NCells = $NCells
-syntau = $tau
+syntau = 5.0
 correlation = $correlation
 
 strdef MLoutputfilename, HHLSoutputfilename
-sprint(MLoutputfilename, "ML_N%d_tau%d.dat", NCells, syntau)
-sprint(HHLSoutputfilename, "HHLS_N%d_tau%d.dat", NCells, syntau)
+sprint(MLoutputfilename, "ML_N%d_tau%d.dat", NCells, $tau)
+sprint(HHLSoutputfilename, "HHLS_N%d_tau%d.dat", NCells, $tau)
 
 load_file("hocs/morphology_mechanisms2.hoc")
 load_file("hocs/$casename.hoc")
@@ -33,13 +33,12 @@ for j=0,1 {
   }
 }
 
+double nw[2]
 // ML
-nw = 0.1e-1 // 5ms
-//nw = 0.6e-1 // 50ms
+nw[0] = $nwml
 
 //HHLS
-//nw = 0.1e-1 // 5ms
-//nw = 0.1e-1 // 50ms
+nw[1] = $nwhhls
 
 objref nclist[2], nc, syn
 for j=0,1 {
@@ -48,7 +47,7 @@ for j=0,1 {
   for i=0,NCells/2-1 {
       syn = l2[j].synlist.o(i)
       nc = l1[i].connect2target(syn)
-      nc.weight = nw
+      nc.weight = nw[j]
       nclist.append(nc)
   }
   
@@ -56,7 +55,7 @@ for j=0,1 {
       syn = l2[j].synlist.o(i)
 //    syn.e = -90
       nc = l1[i].connect2target(syn)
-      nc.weight = nw    
+      nc.weight = nw[j]
       nclist.append(nc)
   }
 }
@@ -69,7 +68,7 @@ for i=0,NCells-1 {
 }
 
 
-xopen("l1_1_ml.ses")
+xopen("hocs/l2.ses")
 
 objref epsp[2]
 
@@ -99,11 +98,11 @@ for i=1,NCells-1 {
 printf("Spike rate = %g Hz\\n", srate/NCells)
 
 f.wopen(MLoutputfilename)
-epsp[0].printf(f, "%.12g\\n")
+for i=0,epsp[0].size-1 f.printf("%.4g %.12g\\n", i*Dt, epsp[0].x[i])
 f.close()
 
 f.wopen(HHLSoutputfilename)
-epsp[1].printf(f, "%.12g\\n")
+for i=0,epsp[1].size-1 f.printf("%.4g %.12g\\n", i*Dt, epsp[1].x[i])
 f.close()
 
 quit()
