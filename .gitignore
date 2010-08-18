@@ -21,7 +21,6 @@ tau_5ms/
 # data
 spiketime/
 *.dat
-*.pdf
 config.js
 
 # NEURON
