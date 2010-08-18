@@ -2,7 +2,7 @@
 
 ## How to use the scripts
 
-`./prepare data-dir`
-`./generate_runhoc.py data-dir`
-`./raster.py data-dir data-name`
+1. `./prepare data-dir`
+1. `./generate_runhoc.py data-dir`
+1. `./raster.py data-dir data-name`
 
