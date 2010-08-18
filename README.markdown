@@ -2,7 +2,6 @@ A simple two-layer network simulation
 =====================================,
 
 
-
 How to use the scripts
 ----------------------
 
