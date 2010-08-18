@@ -7,10 +7,11 @@ hoctemplate = """
 load_file("nrngui.hoc")
 
 tstop = $tstop
+twait = 200
+tstop = tstop+twait
 steps_per_ms = 5
 Dt = 1/steps_per_ms
 N = tstop*steps_per_ms
-twait = 0
 
 NCells = $NCells
 syntau = 5.0
@@ -67,8 +68,7 @@ for i=0,NCells-1 {
     spikecount[i].record(spiketime[i])
 }
 
-
-xopen("hocs/l2.ses")
+//xopen("hocs/l2.ses")
 
 objref epsp[2]
 
@@ -87,7 +87,7 @@ f = new File()
 srate = 0
 strdef spikefilename
 for i=1,NCells-1 {
-    spiketime[i].where(">=", twait)
+    spiketime[i].where(">=", twait).sub(twait)
     srate = srate + 1e3*spiketime[i].size/(tstop-twait)
     sprint(spikefilename, "spiketime/%d.bin",i+1)
     f.wopen(spikefilename)
@@ -97,12 +97,23 @@ for i=1,NCells-1 {
 
 printf("Spike rate = %g Hz\\n", srate/NCells)
 
+
 f.wopen(MLoutputfilename)
-for i=0,epsp[0].size-1 f.printf("%.4g %.12g\\n", i*Dt, epsp[0].x[i])
+for i=0,epsp[0].size-1 {
+  t = i*Dt-twait
+  if (t>=0) {
+    f.printf("%.4g %.12g\\n", t, epsp[0].x[i])
+  }
+}
 f.close()
 
 f.wopen(HHLSoutputfilename)
-for i=0,epsp[1].size-1 f.printf("%.4g %.12g\\n", i*Dt, epsp[1].x[i])
+for i=0,epsp[1].size-1 {
+  t = i*Dt-twait
+  if (t>=0) {
+    f.printf("%.4g %.12g\\n", t, epsp[1].x[i])
+  }
+}
 f.close()
 
 quit()
