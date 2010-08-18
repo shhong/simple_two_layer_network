@@ -14,7 +14,7 @@ Dt = 1/steps_per_ms
 N = tstop*steps_per_ms
 
 NCells = $NCells
-syntau = 5.0
+syntau = 2.5
 correlation = $correlation
 
 strdef MLoutputfilename, HHLSoutputfilename
