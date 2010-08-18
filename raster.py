@@ -21,8 +21,8 @@ class SimulatedData(object):
   
   def set_path(self):
     from os.path import join
-    self.path = {'ML response': 'ML_N%(Ncells)d_tau%(tau)d' % self.params,
-                 'HHLS response': 'HHLS_N%(Ncells)d_tau%(tau)d' % self.params,
+    self.path = {'ML response': 'ML_N%(NCells)d_tau%(tau)d.dat' % self.params,
+                 'HHLS response': 'HHLS_N%(NCells)d_tau%(tau)d.dat' % self.params,
                  'spiketime': 'spiketime'}
     for key in self.path:
       self.path[key] = join(self.root, self.path[key])
@@ -47,6 +47,7 @@ class PSTH(object):
     for direction in ["right", "bottom", "top"]:
       axes.axis[direction].set_visible(False)
     axes.axis["left"].set_label("Neuron id")	
+    axes.set_xlim([0, self.tstop])
   
   def get_spike_rate(self, smoothed=True, span=6):
     from numpy import hamming, convolve, zeros, ones
@@ -72,7 +73,8 @@ class PSTH(object):
       axes.axis[direction].set_visible(False)
     axes.axis["left"].set_label("Rate (Hz)")
     axes.axis["bottom"].set_label("Time (ms)")
-    axes.set_ylim([0, 50])
+    axes.set_ylim([0, max(spike_rate)*1.5])
+    axes.set_xlim([0, self.tstop])
 #    axes.legend(("6ms", "18ms"), prop={'size':8}, loc=9)
   
   def hist_mean_rate(self, axes, bins=10):
@@ -118,7 +120,7 @@ class SpikeTimeData(object):
 def main(path, name):
   from numpy import linspace, loadtxt
   d = SimulatedData(path) 
-  psth = d.spike_time.psth()
+  psth = d.spike_time.psth(tstop=d.params['tstop'])
   
   from mpl_toolkits.axes_grid.axislines import SubplotZero
   import matplotlib.pyplot as plt
@@ -134,31 +136,35 @@ def main(path, name):
   
   ax = SubplotZero(f1, 413)
   f1.add_subplot(ax)
-  dat = loadtxt(d.path['ML response'])
-  t = linspace(0, 5000, dat.size)
-  ax.plot(t, dat, 'k')
+  t, v = loadtxt(d.path['ML response']).T
+#  t = linspace(0, 5000, dat.size)
+  ax.plot(t, v, 'k')
   for direction in ["left", "right", "top", "bottom"]:
     ax.axis[direction].set_visible(False)
   logging.info(str(dir(ax.axis["bottom"])))
 #  ax.axis["bottom"].major_ticklabels=[]
   ax.set_title("ML")
+  ax.set_ylim([min(v), 0])
+  ax.set_xlim([0, max(t)])
   
   ax = SubplotZero(f1, 414)
   f1.add_subplot(ax)
-  dat = loadtxt(d.path['HHLS response'])
-  t = linspace(0, 5000, dat.size)
-  ax.plot(t, dat, 'k')
+  t, v = loadtxt(d.path['HHLS response']).T
+#  t = linspace(0, 5000, dat.size)
+  ax.plot(t, v, 'k')
   for direction in ["left", "right", "top"]:
     ax.axis[direction].set_visible(False)
   ax.axis["bottom"].set_label("Time (ms)")
   ax.set_title("HHLS")
+  ax.set_ylim([min(v), 0])
+  ax.set_xlim([0, max(t)])
   
   f1.subplots_adjust(hspace=0.47, top=0.95, bottom=0.05)
   
   f2 = plt.figure(figsize=[4,4])
   ax = SubplotZero(f2, 111)
   f2.add_subplot(ax)
-  mf = psth.hist_mean_rate(ax, bins=linspace(0,8,20))
+  mf = psth.hist_mean_rate(ax, bins=linspace(0,8,25))
   ax.set_title({"highvar": "High variance", "lowvar": "Low variance"}[name])
   print "Mean firing rate =", mf.mean(), "Hz", "(", mf.std(),")"
   plt.show()
