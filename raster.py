@@ -67,13 +67,13 @@ class PSTH(object):
     spike_rate = self.get_spike_rate(smoothed=smoothed, span=span)
     axes.plot(spike_rate, 'b')
     axes.hold(True)
+    axes.set_ylim([0, max(spike_rate)*1.1])
     spike_rate = self.get_spike_rate(smoothed=smoothed, span=3*span)
     axes.plot(spike_rate, 'r')    
     for direction in ["right", "top", "bottom"]:
       axes.axis[direction].set_visible(False)
     axes.axis["left"].set_label("Rate (Hz)")
     axes.axis["bottom"].set_label("Time (ms)")
-    axes.set_ylim([0, max(spike_rate)*1.5])
     axes.set_xlim([0, self.tstop])
 #    axes.legend(("6ms", "18ms"), prop={'size':8}, loc=9)
   
