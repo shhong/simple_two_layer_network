@@ -53,7 +53,8 @@ class PSTH(object):
     from numpy import hamming, convolve, zeros, ones
     x = zeros(int(self.tstop))
     for i, st in enumerate(self.spiketimes):
-      x[st] = x[st] + 1
+      st_ = st[st<self.tstop]
+      x[st_] = x[st_] + 1
     self.spike_rate_raw = x/len(self.spiketimes)*1e3
     if smoothed==False:
       spike_rate = self.spike_rate_raw
@@ -119,7 +120,8 @@ class SpikeTimeData(object):
 
 def main(path, name):
   from numpy import linspace, loadtxt
-  d = SimulatedData(path) 
+  d = SimulatedData(path)
+#  d.params['tstop'] = 1250
   psth = d.spike_time.psth(tstop=d.params['tstop'])
   
   from mpl_toolkits.axes_grid.axislines import SubplotZero
@@ -137,6 +139,8 @@ def main(path, name):
   ax = SubplotZero(f1, 413)
   f1.add_subplot(ax)
   t, v = loadtxt(d.path['ML response']).T
+  ind = (t<d.params['tstop'])
+  t, v = t[ind], v[ind]
 #  t = linspace(0, 5000, dat.size)
   ax.plot(t, v, 'k')
   for direction in ["left", "right", "top", "bottom"]:
@@ -150,6 +154,8 @@ def main(path, name):
   ax = SubplotZero(f1, 414)
   f1.add_subplot(ax)
   t, v = loadtxt(d.path['HHLS response']).T
+  ind = (t<d.params['tstop'])
+  t, v = t[ind], v[ind]
 #  t = linspace(0, 5000, dat.size)
   ax.plot(t, v, 'k')
   for direction in ["left", "right", "top"]:
