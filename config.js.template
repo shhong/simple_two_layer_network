@@ -1,7 +1,0 @@
-{ 
-  casename: "highvar",
-  tstop: 8000,
-  NCells: 200,
-  tau: 5.0,
-  correlation: 0.2
-}

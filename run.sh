@@ -1,6 +1,7 @@
 #!/bin/bash
 
 ln -s $1/spiketime .
+rm spiketime/*
 ./generate_runhoc.py $1/config.js run.hoc
 nrngui run.hoc
 mv HHLS_*.dat $1
