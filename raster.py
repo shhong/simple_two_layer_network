@@ -64,12 +64,12 @@ class PSTH(object):
       spike_rate = convolve(window, self.spike_rate_raw, mode="same")/nn
     return spike_rate
   
-  def plot_rate(self, axes, smoothed=True, span=6):
+  def plot_rate(self, axes, smoothed=True, span=5):
     spike_rate = self.get_spike_rate(smoothed=smoothed, span=span)
     axes.plot(spike_rate, 'b')
     axes.hold(True)
     axes.set_ylim([0, max(spike_rate)*1.1])
-    spike_rate = self.get_spike_rate(smoothed=smoothed, span=3*span)
+    spike_rate = self.get_spike_rate(smoothed=smoothed, span=span*8)
     axes.plot(spike_rate, 'r')    
     for direction in ["right", "top", "bottom"]:
       axes.axis[direction].set_visible(False)
