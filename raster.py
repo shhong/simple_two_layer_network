@@ -49,6 +49,14 @@ class PSTH(object):
     axes.axis["left"].set_label("Neuron id")	
     axes.set_xlim([0, self.tstop])
   
+  def get_spike_trains(self):
+    from numpy import zeros
+    x = zeros((len(self.spiketimes), int(self.tstop)))
+    for i, st in enumerate(self.spiketimes):
+      st_ = st[st<self.tstop]
+      x[i,st_] = 1
+    return x
+  
   def get_spike_rate(self, smoothed=True, span=6):
     from numpy import hamming, convolve, zeros, ones
     x = zeros(int(self.tstop))
