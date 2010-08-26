@@ -13,7 +13,7 @@ def main(path, n):
   for i in range(n):
     logging.info(str(i))
     for t in y[i+1:]:
-      cgm = cgm + xcov3(y[i], t)
+      cgm = cgm + xcov3(y[i], t, L=200)
       j = j + 1
   from os.path import join
   from numpy import savetxt
