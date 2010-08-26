@@ -68,7 +68,7 @@ for i=0,NCells-1 {
     spikecount[i].record(spiketime[i])
 }
 
-//xopen("hocs/l2.ses")
+xopen("hocs/l2.ses")
 
 objref epsp[2]
 
