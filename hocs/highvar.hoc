@@ -5,8 +5,8 @@ objref l1[NCells]
 //for i=NCells/2,NCells-1 l1[i] = new HHLS(i+2, -0.0873, sqrt(0.0020), correlation, 5, 5)
 
 // for 10ms
-for i=0,NCells/2-1 l1[i] = new HHLS(i+2, -0.0868, sqrt(0.0020), correlation, 10, 5)
-for i=NCells/2,NCells-1 l1[i] = new HHLS(i+2, -0.0868, sqrt(0.0020), correlation, 10, 5)
+//for i=0,NCells/2-1 l1[i] = new HHLS(i+2, -0.0868, sqrt(0.0020), correlation, 10, 5)
+//for i=NCells/2,NCells-1 l1[i] = new HHLS(i+2, -0.0868, sqrt(0.0020), correlation, 10, 5)
 
 // for 5ms, more correlation
 //for i=0,NCells/2-1 l1[i] = new HHLS(i+2, -0.0825, sqrt(0.0020), correlation, 5, 5)
@@ -16,6 +16,6 @@ for i=NCells/2,NCells-1 l1[i] = new HHLS(i+2, -0.0868, sqrt(0.0020), correlation
 //for i=0,NCells/2-1 l1[i] = new HHLS(i+2, -0.07, sqrt(0.0020), correlation, 50, 5)
 //for i=NCells/2,NCells-1 l1[i] = new HHLS(i+2, -0.07, sqrt(0.0020), correlation, 50, 5)
 
-// for 10ms
-for i=0,NCells/2-1 l1[i] = new HHLS(i+2, -0.0863, sqrt(0.0020), correlation, 10, 5)
-for i=NCells/2,NCells-1 l1[i] = new HHLS(i+2, -0.0863, sqrt(0.0020), correlation, 10, 5)
+// for 25ms
+for i=0,NCells/2-1 l1[i] = new HHLS(i+2, -0.0838, sqrt(0.0020), correlation, 25, 5)
+for i=NCells/2,NCells-1 l1[i] = new HHLS(i+2, -0.0838, sqrt(0.0020), correlation, 25, 5)
