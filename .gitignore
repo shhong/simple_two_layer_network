@@ -22,11 +22,16 @@ tau_5ms/
 spiketime/
 *.dat
 config.js
+data/
 
 # NEURON
 x86_64/
 run.hoc
 testrun.hoc
 
-# pysmell
+# python
 PYSMELL*
+*.pyc
+
+# Mac binary
+*.so
