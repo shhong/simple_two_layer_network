@@ -175,7 +175,7 @@ def main(path, name):
   ax.set_xlim([0, max(t)])
   
   f1.subplots_adjust(hspace=0.47, top=0.95, bottom=0.05)
-  f1.savefig(join(path, name+'.png'), dpi=200)
+  f1.savefig(join(path, name+'.eps'))
   
   f2 = plt.figure(figsize=[4,4])
   ax = SubplotZero(f2, 111)
@@ -183,7 +183,7 @@ def main(path, name):
   mf = psth.hist_mean_rate(ax, bins=linspace(0,8,25))
   ax.set_title({"highvar": "High variance", "lowvar": "Low variance"}[name])
   print "Mean firing rate =", mf.mean(), "Hz", "(", mf.std(),")"
-  f2.savefig(join(path, name+'_hist.png'), dpi=200)
+  f2.savefig(join(path, name+'_hist.eps'))
 #  plt.show()
 
 if __name__ == '__main__':
